@@ -4,6 +4,7 @@ This is a simple introduction to matlab for image analysis. The codes used here 
 Volume: This part deals with calculation of volume of a binary mask containing ones and zeroes. The file Niti_vol.m also contains codes in R and fsl for performing the same task are also provided.
 
 ```matlab
+matlab
 ImN='test.nii'; %assign ImN 
 Roi=niftiread(ImN); %Roi is handle for image
 Roi=Roi>0.5; %ensure binary mask
