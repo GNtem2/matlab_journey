@@ -4,11 +4,19 @@ This is a simple introduction to matlab for image analysis. The codes used here 
 Volume: This part deals with calculation of volume of a binary mask containing ones and zeroes. The file Niti_vol.m also contains codes in R and fsl for performing the same task are also provided.
 
 ```matlab
-matlab
+%matlab
 ImN='test.nii'; %assign ImN 
+info=niftiinfo(ImN);%check dimensions of ImN
 Roi=niftiread(ImN); %Roi is handle for image
+
+%nnz=number of nonzero elements
+%fslstats 1000M_ica.nii -V
+Volume=nnz(Roi)*info.PixelDimensions(1)*info.PixelDimensions(2)*info.PixelDimensions(3)/1000
+
 Roi=Roi>0.5; %ensure binary mask
 rp=regionprops3(Roi) %find properties of volume data
 ```
+```fsl
 
+```
 TSNE: This part deals with calculation of centre of gravity of a binary image. The file tsne_image.m illustrates the use of random number to create 3D array and 3D plot with scatter3. T-stochastic neighbourhood embedding (tsne) is used to visualise the low dimensional representation of the imaging data. the outputs of tsne are illustrated with 4 subplots, each created from different distance measurements. 
