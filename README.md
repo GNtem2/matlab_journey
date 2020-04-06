@@ -30,13 +30,13 @@ TSNE: This part deals with calculation of centre of gravity of a binary image. T
 ```matlab
 %generate array of data
 a=randperm(10,10);
-a1= a+rp.Centroid(1);
+a1= a+ s.Centroid(1);
 
 b=randperm(13,10); %10 number up to 13
-b1= b+rp.Centroid(1,2); %column 2 row 1
+b1= b+ s.Centroid(1,2); %column 2 row 1
 
 c=randperm(16,10); %10 number up to 16
-c1= c+rp.Centroid(1,3); %column 3 row 1
+c1= c+ s.Centroid(1,3); %column 3 row 1
 
 %create string array
 Vol=["small";"medium";"large";"large";"medium";"medium";"large";"large";"small";"medium"]
