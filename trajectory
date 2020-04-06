@@ -1,0 +1,51 @@
+%Open file
+df=readtable('COGFullData25Marnopw.csv');
+
+%Extract COG and orientation data
+df_cog=(df(:,2:7));
+df_cog.Properties.VariableNames={'xfinal','yfinal','zfinal', 'xorifinal','yorifinal','zorifinal'};
+
+%Generate random COG + orientation perfusion data
+rng('default');
+randtable=[df_cog.xfinal.*2*rand(1) df_cog.yfinal.*2*rand(1) df_cog.zfinal.*2*rand(1) df_cog.xorifinal.*2*rand(1) df_cog.yorifinal.*2*rand(1) df_cog.zorifinal.*2*rand(1)];
+randtable_table=array2table(randtable);
+randtable_table.Properties.VariableNames={'xrand','yrand','zrand','xorirand','yorirand','zorirand'};
+
+% Add random data to original COG + perfusion data
+dfcog=[df_cog.xfinal df_cog.yfinal df_cog.zfinal];
+dfori=[df_cog.xorifinal df_cog.yorifinal df_cog.zorifinal];
+dfrancog=[randtable_table.xrand randtable_table.yrand randtable_table.zrand];
+dfranori=[randtable_table.xorirand randtable_table.yorirand randtable_table.zorirand];
+df_rand=table(dfcog, dfori, dfrancog, dfranori);
+
+% Calculate norm of COG
+%notcorrect% func=@(dfcog,dgrancog)norm(df_rand.dfcog(:,1:3)-df_rand.dfrancog(:,1:3))
+%notcorrect% B=rowfun(func,df_rand)
+a_loop=df_rand.dfcog(:,1);
+norm_cog=zeros(length(a_loop),1);
+for k = 1:length(a_loop)
+    normal=norm(df_rand.dfrancog(k,:) - df_rand.dfcog(k,:));
+    norm_cog(k)=normal;
+end
+df_rand.norm_cog=norm_cog;
+    
+% Calculate orientation
+%%a = atan2d(norm(cross(P1,P2)),dot(P1,P2)); % Angle in degrees
+% a = atan2(norm(cross(df_rand.dfcog(1,:),df_rand.dfrancog(1,:))),dot(df_rand.dfcog(1,:),df_rand.dfrancog(1,:))); % Angle in radians
+% Vector is defined by terminal - initial. Initial is the random. 
+vectorori=zeros(length(a_loop),3);
+for v = 1:length(a_loop)
+    final = df_rand.dfori(v,:);
+    initial = df_rand.dfranori(v,:);
+    vector = final - initial;
+    x = vector(1);
+    y = vector(2);
+    z = vector(3);
+    ax = atan2d(sqrt(y^2+z^2),x);
+    ay = atan2d(sqrt(z^2+x^2),y);
+    az = atan2d(sqrt(x^2+y^2),z);
+    vectorori(v,1)=ax
+    vectorori(v,2)=ay
+    vectorori(v,3)=az
+end
+df_rand.ori_cog=vectorori;
